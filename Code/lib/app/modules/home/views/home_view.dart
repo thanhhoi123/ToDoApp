@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:get/get.dart';
-import 'package:init_project/app/modules/home/views/profile_user_screen.dart';
+import 'package:init_project/app/modules/home/views/list_todo_screen.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -24,7 +24,7 @@ class HomeView extends GetView<HomeController> {
               child: ElevatedButton(
                 onPressed: () async {
                   await controller.googleLogin();
-                  Get.to(() => ProfileUserScreen());
+                  Get.to(() => ListTodoScreen());
                 }, 
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
