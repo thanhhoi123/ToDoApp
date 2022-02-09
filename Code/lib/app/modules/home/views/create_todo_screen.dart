@@ -12,7 +12,6 @@ class CreateTodoScreen extends GetView<HomeController>{
         centerTitle: true,
       ),
       body: Container(
-        padding: const EdgeInsets.all(16),
         child: Column(
           children: <Widget>[
             TextField(

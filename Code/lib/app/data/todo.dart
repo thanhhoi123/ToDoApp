@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Todo{
-  String? id;
-  String? title, content;
-  DateTime? dueDate;
-  bool? isDone, isFavorite, isTimeUp;
+  String id;
+  String title, content;
+  DateTime dueDate;
+  bool isDone, isFavorite, isTimeUp;
 
   Todo({
     required this.id,

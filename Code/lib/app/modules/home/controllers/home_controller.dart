@@ -52,13 +52,22 @@ class HomeController extends GetxController {
     }    
   }
 
+  final isDone = false.obs;
+
   Stream<List<Todo>> getListTodo() => FirebaseFirestore.instance
     .collection('users').doc(currentUser!.id)
     .collection('todos').snapshots()
     .map((snapshot) => snapshot.docs.map((e) => Todo.fromJson(e.data())).toList());
 
   void removeTodo(String id){
-    final docUser = FirebaseFirestore.instance.collection('todos').doc('${id}');
-    docUser.delete();
+    final docTodo = FirebaseFirestore.instance.collection('users').doc(currentUser!.id).collection('todos').doc(id);
+    docTodo.delete();
+  }
+
+  void updateDone(String id, bool value){
+    final docTodo = FirebaseFirestore.instance.collection('users').doc(currentUser!.id).collection('todos').doc(id);
+    docTodo.update({
+      'is_done': value
+    });
   }
 }
