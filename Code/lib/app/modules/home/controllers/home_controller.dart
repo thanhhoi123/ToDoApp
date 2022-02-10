@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:init_project/app/data/todo.dart';
@@ -7,6 +9,11 @@ import 'package:init_project/app/data/todo.dart';
 class HomeController extends GetxController {
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? currentUser;
+  final isDone = false.obs;
+  final initDate = DateTime.now();
+  final initTime = TimeOfDay(hour: 6, minute: 0);
+  DateTime? datetimePicker;
+  final datetimeText = 'Due day'.obs;
 
   Future googleLogin() async{
     final googleUser = await googleSignIn.signIn();
@@ -30,7 +37,7 @@ class HomeController extends GetxController {
 
   String? contentCreate, titleCreate;
 
-  Future createTodo(String title, String content) async {
+  Future createTodo(String title, String content, String dueDate) async {
     try{
       final docTodo = FirebaseFirestore.instance.collection('users').doc(currentUser!.id).collection('todos').doc();
 
@@ -38,7 +45,7 @@ class HomeController extends GetxController {
         id: docTodo.id,
         title: title,
         content: content,
-        dueDate: DateTime.now(),
+        dueDate: DateTime.parse(dueDate),
         isDone: false,
         isFavorite: false,
         isTimeUp: false
@@ -51,8 +58,6 @@ class HomeController extends GetxController {
       print(e.toString());
     }    
   }
-
-  final isDone = false.obs;
 
   Stream<List<Todo>> getListTodo() => FirebaseFirestore.instance
     .collection('users').doc(currentUser!.id)
@@ -70,4 +75,12 @@ class HomeController extends GetxController {
       'is_done': value
     });
   }
+
+  void updataFavorite(String id, bool value){
+    final docTodo = FirebaseFirestore.instance.collection('users').doc(currentUser!.id).collection('todos').doc(id);
+    docTodo.update({
+      'is_favorite': value
+    });
+  }
+
 }

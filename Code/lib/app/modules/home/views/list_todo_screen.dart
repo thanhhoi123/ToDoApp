@@ -18,7 +18,7 @@ class ListTodoScreen extends GetView<HomeController>{
         },
       ),
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Text('List Todo'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -28,7 +28,8 @@ class ListTodoScreen extends GetView<HomeController>{
             }, 
             icon: Icon(Icons.logout)
           ),
-          ElevatedButton(
+        ],
+        leading: ElevatedButton(
             onPressed: () {}, 
             child: SizedBox(
               width: 35,
@@ -38,8 +39,7 @@ class ListTodoScreen extends GetView<HomeController>{
                 backgroundImage: NetworkImage(controller.currentUser!.photoUrl.toString()),
               ),
             ),
-          )
-        ],
+          ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -70,12 +70,20 @@ class ListTodoScreen extends GetView<HomeController>{
                                 controller.removeTodo(snapshot.data![index].id.toString());
                               },
                               leading: Checkbox(
-                                  value: snapshot.data![index].isDone, 
-                                  onChanged: (value) {
-                                    controller.updateDone(snapshot.data![index].id, value!);
-                                  },
-                                )
+                                value: snapshot.data![index].isDone, 
+                                onChanged: (value) {
+                                  controller.updateDone(snapshot.data![index].id, value!);
+                                },
                               ),
+                              trailing: IconButton(
+                                icon: Icon(Icons.star, color: snapshot.data![index].isFavorite? Colors.amber: Colors.grey),
+                                onPressed: () {
+                                  snapshot.data![index].isFavorite
+                                  ? controller.updataFavorite(snapshot.data![index].id, false)
+                                  : controller.updataFavorite(snapshot.data![index].id, true);
+                                },
+                              ),
+                            ),
                           );
                         }
                       ),
