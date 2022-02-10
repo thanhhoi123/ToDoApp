@@ -12,7 +12,7 @@ class HomeView extends GetView<HomeController> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text('HomeView'),
+        title: const Text('Login'),
         centerTitle: true,
       ),
       body: Center(
@@ -30,8 +30,8 @@ class HomeView extends GetView<HomeController> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FaIcon(FontAwesomeIcons.google, color: Colors.red,),
-                    SizedBox(width: 8,),
-                    Text('Sign in with google', style: TextStyle(fontSize: 16),)
+                    const SizedBox(width: 8,),
+                    const Text('Sign in with google', style: TextStyle(fontSize: 16),)
                   ],
                 )
               ),

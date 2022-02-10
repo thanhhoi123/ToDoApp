@@ -3,17 +3,31 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:init_project/app/data/todo.dart';
 
 class HomeController extends GetxController {
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? currentUser;
+  
   final isDone = false.obs;
+  
   final initDate = DateTime.now();
   final initTime = TimeOfDay(hour: 6, minute: 0);
   DateTime? datetimePicker;
   final datetimeText = 'Due day'.obs;
+
+  bool isUpdate = false;
+  Todo todoUpdateOrCreate = new Todo(
+    id: '',
+    content: '',
+    title: '',
+    dueDate: DateTime.now(),
+    isDone: false,
+    isFavorite: false,
+    isTimeUp: false
+  );
 
   Future googleLogin() async{
     final googleUser = await googleSignIn.signIn();
@@ -35,9 +49,12 @@ class HomeController extends GetxController {
     FirebaseAuth.instance.signOut();
   }
 
-  String? contentCreate, titleCreate;
+  Stream<List<Todo>> getListTodo() => FirebaseFirestore.instance
+    .collection('users').doc(currentUser!.id)
+    .collection('todos').snapshots()
+    .map((snapshot) => snapshot.docs.map((e) => Todo.fromJson(e.data())).toList());
 
-  Future createTodo(String title, String content, String dueDate) async {
+  Future<void> createTodo(String title, String content, String dueDate) async {
     try{
       final docTodo = FirebaseFirestore.instance.collection('users').doc(currentUser!.id).collection('todos').doc();
 
@@ -59,10 +76,19 @@ class HomeController extends GetxController {
     }    
   }
 
-  Stream<List<Todo>> getListTodo() => FirebaseFirestore.instance
-    .collection('users').doc(currentUser!.id)
-    .collection('todos').snapshots()
-    .map((snapshot) => snapshot.docs.map((e) => Todo.fromJson(e.data())).toList());
+  Future<void> updateTodo(String id, String title, String content, String dueDate) async{
+    try{
+      final docTodo = FirebaseFirestore.instance.collection('users').doc(currentUser!.id).collection('todos').doc(id);
+      docTodo.update({
+        'title': title,
+        'content': content,
+        'dueDate': dueDate
+      });
+    }
+    catch(e){
+
+    }
+  }
 
   void removeTodo(String id){
     final docTodo = FirebaseFirestore.instance.collection('users').doc(currentUser!.id).collection('todos').doc(id);
@@ -76,7 +102,7 @@ class HomeController extends GetxController {
     });
   }
 
-  void updataFavorite(String id, bool value){
+  void updateFavorite(String id, bool value){
     final docTodo = FirebaseFirestore.instance.collection('users').doc(currentUser!.id).collection('todos').doc(id);
     docTodo.update({
       'is_favorite': value
