@@ -16,6 +16,8 @@ class CreateTodoScreen extends GetView<HomeController>{
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             controller.datetimeText.value = 'Due date';
+            controller.todoUpdateOrCreate.content = '';
+            controller.todoUpdateOrCreate.title = '';
             Get.back();
           },
         ),
@@ -104,6 +106,8 @@ class CreateTodoScreen extends GetView<HomeController>{
                     );
                   }
                   controller.datetimeText.value = 'Due date';
+                  controller.todoUpdateOrCreate.content = '';
+                  controller.todoUpdateOrCreate.title = '';
                   Get.back();
                 }, 
                 child: const Text('Submit')

@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:init_project/app/data/todo.dart';
 
@@ -29,6 +27,8 @@ class HomeController extends GetxController {
     isTimeUp: false
   );
 
+  bool isDarkMode = false;
+
   Future googleLogin() async{
     final googleUser = await googleSignIn.signIn();
     if(googleUser == null) return;
@@ -51,7 +51,7 @@ class HomeController extends GetxController {
 
   Stream<List<Todo>> getListTodo() => FirebaseFirestore.instance
     .collection('users').doc(currentUser!.id)
-    .collection('todos').snapshots()
+    .collection('todos').orderBy('is_done').snapshots()
     .map((snapshot) => snapshot.docs.map((e) => Todo.fromJson(e.data())).toList());
 
   Future<void> createTodo(String title, String content, String dueDate) async {
@@ -107,6 +107,15 @@ class HomeController extends GetxController {
     docTodo.update({
       'is_favorite': value
     });
+  }
+
+  void updateTimeUp(String id, DateTime dueDay){
+    final docTodo = FirebaseFirestore.instance.collection('users').doc(currentUser!.id).collection('todos').doc(id);
+    if(dueDay.isBefore(DateTime.now())){
+      docTodo.update({
+        'is_time_up': true
+      });
+    }
   }
 
 }

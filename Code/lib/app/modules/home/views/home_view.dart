@@ -14,6 +14,7 @@ class HomeView extends GetView<HomeController> {
       appBar: AppBar(
         title: const Text('Login'),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(

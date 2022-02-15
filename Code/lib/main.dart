@@ -6,6 +6,8 @@ import 'app/routes/app_pages.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 
+import 'app/viewmodel/themes/my_themes.dart';
+
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -14,6 +16,8 @@ Future<void> main() async{
       title: "Application",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
+      theme: MyThemes.lightTheme,
+      darkTheme: MyThemes.darkTheme,
     ),
   );
 }
